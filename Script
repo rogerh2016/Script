@@ -197,7 +197,10 @@ if PlaceId == 1962086868 then
     Tabs.Misc:AddButton({
         Title = "Anti-Ban Bypass",
         Callback = function()
+                while true do
+                    task.wait(45)
             antiBanBypass()
+                  task.wait(5)  
         end,
     })
 
@@ -209,9 +212,12 @@ if PlaceId == 1962086868 then
             local hitboxonaplayer = game.Players.LocalPlayer.Character:FindFirstChild("hitboxScript")
             local Killscript = game.Players.LocalPlayer.Character:FindFirstChild("KillScript")
         if hitbox and hitboxonaplayer and Killscript then
+                while true do
+                     task.wait(45)   
         hitbox:Destroy()
          hitboxonaplayer:Destroy()
             Killscript:Destroy()
+               task.wait(5)         
         end
         end,
     })
