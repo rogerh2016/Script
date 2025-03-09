@@ -5,24 +5,26 @@ local PlaceId = game.PlaceId
 
 local PlaceId = game.PlaceId
 
+local PlaceId = game.PlaceId
+
 if PlaceId == 1962086868 then
     -- Tower of Hell Script Execution
     print("Tower of Hell Script Executing")
     task.wait(0.5)
 
-    -- Anti-Ban Bypass (to be triggered via button later)
+    -- Anti-Ban Bypass Function (used via a button)
     local function antiBanBypass()
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local GetBan = ReplicatedStorage:WaitForChild("getBans", 5)
         local AppealBans = ReplicatedStorage:WaitForChild("appealBan", 5)
-        local HookingBan = game.Players.LocalPlayer.Character:WaitForChild("HookBan")
+        local HookingBan = game.Players.LocalPlayer.Character:WaitForChild("HookBan", 5)
         if GetBan and AppealBans and HookingBan then
             GetBan:Destroy()
             AppealBans:Destroy()
             HookingBan:Destroy()
-            print("Anti-ban: 'getBans' , 'appealBan' , 'HookBan' destroyed.")
+            print("Anti-ban: 'getBans', 'appealBan' and 'HookBan' destroyed.")
         else
-            print("Anti-ban: 'getBans' or 'appealBan' or 'HookBan' not found.")
+            print("Anti-ban: one or more objects not found.")
         end
     end
 
@@ -51,7 +53,7 @@ if PlaceId == 1962086868 then
         Settings = Window:AddTab({ Title = "Settings", Icon = "settings" }),
     }
 
-    -- Load Fluent addons
+    -- Load Fluent Addons
     local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
     local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
     SaveManager:SetLibrary(Fluent)
@@ -59,12 +61,53 @@ if PlaceId == 1962086868 then
     InterfaceManager:BuildInterfaceSection(Tabs.Settings)
     SaveManager:BuildConfigSection(Tabs.Settings)
 
+    -- Notify execution
+    Fluent:Notify({
+        Title = "Executed",
+        Content = "Tower of Hell Script Loaded",
+        Duration = 2,
+    })
+
     -------------------------
-    -- Create Sliders First (so update loop can read their values)
+    -- Character & Update Loop Setup
+    -------------------------
+    local player = game.Players.LocalPlayer
+    local humanoid = nil
+    local updateLoop
+
+    local function updateSpeedAndJump()
+        if humanoid then
+            humanoid.WalkSpeed = walkSpeedSlider.Value
+            humanoid.JumpPower = jumpPowerSlider.Value
+        end
+    end
+
+    local function onCharacterAdded(character)
+        humanoid = character:WaitForChild("Humanoid")
+        -- Cancel previous update loop if it exists
+        if updateLoop then
+            task.cancel(updateLoop)
+            updateLoop = nil
+        end
+        updateLoop = task.spawn(function()
+            while character.Parent do
+                updateSpeedAndJump()
+                task.wait(0.5)
+            end
+        end)
+    end
+
+    player.CharacterAdded:Connect(onCharacterAdded)
+    if player.Character then
+        onCharacterAdded(player.Character)
+    end
+
+    -------------------------
+    -- Speed and Jump Power Sliders
     -------------------------
     local walkSpeedSlider = Tabs.Main:AddSlider("WalkSpeed", {
         Title = "Walk Speed",
-        Description = "Adjust WalkSpeed",
+        Description = "Set WalkSpeed (game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value)",
         Default = 16,
         Min = 1,
         Max = 100,
@@ -79,7 +122,7 @@ if PlaceId == 1962086868 then
 
     local jumpPowerSlider = Tabs.Main:AddSlider("JumpPower", {
         Title = "Jump Power",
-        Description = "Adjust JumpPower",
+        Description = "Set JumpPower (game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value)",
         Default = 50,
         Min = 1,
         Max = 100,
@@ -93,38 +136,11 @@ if PlaceId == 1962086868 then
     })
 
     -------------------------
-    -- Character Setup: Update Speed and Jump Every 0.5 Seconds
-    -------------------------
-    local player = game.Players.LocalPlayer
-    local humanoid = nil
-
-    local function updateSpeedAndJump()
-        if humanoid and walkSpeedSlider and jumpPowerSlider then
-            humanoid.WalkSpeed = walkSpeedSlider.Value
-            humanoid.JumpPower = jumpPowerSlider.Value
-        end
-    end
-
-    local function onCharacterAdded(character)
-        humanoid = character:WaitForChild("Humanoid")
-        task.spawn(function()
-            while true do
-                updateSpeedAndJump()
-                task.wait(0.5)
-            end
-        end)
-    end
-
-    player.CharacterAdded:Connect(onCharacterAdded)
-    if player.Character then
-        onCharacterAdded(player.Character)
-    end
-
-    -------------------------
     -- Unlimited Jump Toggle
     -------------------------
     local infJumpEnabled = false
     local infJumpLoop
+    local UIS = game:GetService("UserInputService")
 
     Tabs.Main:AddToggle("InfJump", {
         Title = "Unlimited Jumps",
@@ -135,7 +151,7 @@ if PlaceId == 1962086868 then
                 if not infJumpLoop then
                     infJumpLoop = task.spawn(function()
                         while infJumpEnabled do
-                            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.Space) then
+                            if UIS:IsKeyDown(Enum.KeyCode.Space) then
                                 local Character = player.Character
                                 local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
                                 local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
@@ -192,40 +208,21 @@ if PlaceId == 1962086868 then
     })
 
     -------------------------
-    -- Misc Tab: Anti-Ban, DEX, and AutoJump
+    -- Misc Tab: Anti-Ban, DEX, AutoJump, and Anti-Kill
     -------------------------
     Tabs.Misc:AddButton({
         Title = "Anti-Ban Bypass",
         Callback = function()
+            -- Repeat anti-ban bypass every 45 seconds in a loop
+            task.spawn(function()
                 while true do
                     task.wait(45)
-            antiBanBypass()
-                  task.wait(5)  
-            end
+                    antiBanBypass()
+                    task.wait(5)
+                end
+            end)
         end,
     })
-
-    Tabs.Misc:AddButton({
-        Title = "Anti-Kill",
-        Callback = function()
-            local Starterplayer = game:GetService("StarterPlayer")
-        local hitbox = Starterplayer.StarterCharacterScripts:FindFirstChild("hitboxScript")
-            local hitboxonaplayer = game.Players.LocalPlayer.Character:FindFirstChild("hitboxScript")
-            local Killscript = game.Players.LocalPlayer.Character:FindFirstChild("KillScript")
-        if hitbox and hitboxonaplayer and Killscript then
-                while true do
-                     task.wait(45)   
-        hitbox:Destroy()
-         hitboxonaplayer:Destroy()
-            Killscript:Destroy()
-               task.wait(5) 
-               end        
-        end
-        end,
-    })
-
-
-    
 
     Tabs.Misc:AddButton({
         Title = "Enable DEX",
@@ -247,33 +244,26 @@ if PlaceId == 1962086868 then
         end,
     })
 
-
-         Tabs.Misc:AddButton({
-        Title = "Anti-Fog",
-          Description = "Removes fog when someone buys it",
+    Tabs.Misc:AddButton({
+        Title = "Anti-Kill",
         Callback = function()
-            local Fog = game.ReplicatedStorage.Mutators:FindFirstChild("fog")
-     if Fog then
-     Fog:Destroy()
-     end
+            local StarterPlayer = game:GetService("StarterPlayer")
+            local hitbox = StarterPlayer.StarterCharacterScripts:FindFirstChild("hitboxScript")
+            local hitboxOnPlayer = game.Players.LocalPlayer.Character:FindFirstChild("hitboxScript")
+            local killScript = game.Players.LocalPlayer.Character:FindFirstChild("KillScript")
+            if hitbox and hitboxOnPlayer and killScript then
+                task.spawn(function()
+                    while true do
+                        task.wait(45)
+                        hitbox:Destroy()
+                        hitboxOnPlayer:Destroy()
+                        killScript:Destroy()
+                        task.wait(5)
+                    end
+                end)
+            end
         end,
     })
-
-         Tabs.Misc:AddButton({
-        Title = "Anti-BunnyHop Script",
-            Description = "Removes BunnyHop Script when someone buys it (STILL WORKS WITH ATUOJUMP)",
-        Callback = function()
-            local BunnyJump = game.ReplicatedStorage.Mutators:FindFirstChild("bunny")
-     if BunnyJump then
-     BunnyJump:Destroy()
-     end
-        end,
-    })
-
-
-
-
-
     
 
 else
