@@ -293,7 +293,6 @@ elseif PlaceId == 1962086868 then
             end
         end,
     })
-else
     
 else
 
