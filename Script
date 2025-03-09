@@ -207,9 +207,11 @@ if PlaceId == 1962086868 then
             local Starterplayer = game:GetService("StarterPlayer")
         local hitbox = Starterplayer.StarterCharacterScripts:FindFirstChild("hitboxScript")
             local hitboxonaplayer = game.Players.LocalPlayer.Character:FindFirstChild("hitboxScript")
-        if hitbox and hitboxonaplayer then
+            local Killscript = game.Players.LocalPlayer.Character:FindFirstChild("KillScript")
+        if hitbox and hitboxonaplayer and Killscript then
         hitbox:Destroy()
-         hitboxonaplayer:Destroy           
+         hitboxonaplayer:Destroy()
+            Killscript:Destroy()
         end
         end,
     })
