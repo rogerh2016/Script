@@ -207,7 +207,7 @@ if PlaceId == 1962086868 then
             local Starterplayer = game:GetService("StarterPlayer")
         local hitbox = Starterplayer.StarterCharacterScripts:FindFirstChild("hitboxScript")
         if hitbox then
-        hitbox:Destory()
+        hitbox:Destroy()
         end
         end,
     })
