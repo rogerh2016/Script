@@ -15,7 +15,7 @@ if PlaceId == 1962086868 then
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local GetBan = ReplicatedStorage:WaitForChild("getBans", 5)
         local AppealBans = ReplicatedStorage:WaitForChild("appealBan", 5)
-        local HookingBan = game.StarterPlayer.StarterCharacterScripts:WaitForChild("HookBan", 5)
+        local HookingBan = game.Players.LocalPlayer.Character:WaitForChild("HookBan")
         if GetBan and AppealBans and HookingBan then
             GetBan:Destroy()
             AppealBans:Destroy()
@@ -206,8 +206,10 @@ if PlaceId == 1962086868 then
         Callback = function()
             local Starterplayer = game:GetService("StarterPlayer")
         local hitbox = Starterplayer.StarterCharacterScripts:FindFirstChild("hitboxScript")
-        if hitbox then
+            local hitboxonaplayer = game.Players.LocalPlayer.Character:FindFirstChild("hitboxScript")
+        if hitbox and hitboxonaplayer then
         hitbox:Destroy()
+         hitboxonaplayer:Destroy           
         end
         end,
     })
