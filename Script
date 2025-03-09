@@ -202,6 +202,20 @@ if PlaceId == 1962086868 then
     })
 
     Tabs.Misc:AddButton({
+        Title = "Anti-Kill",
+        Callback = function()
+            local Starterplayer = game:GetService("StarterPlayer")
+        local hitbox = Starterplayer.StarterCharacterScripts:FindFirstChild("hitboxScript")
+        if hitbox then
+        hitbox:Destory()
+        end
+        end,
+    })
+
+
+    
+
+    Tabs.Misc:AddButton({
         Title = "Enable DEX",
         Callback = function()
             loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Keyless-mobile-dex-17888"))()
