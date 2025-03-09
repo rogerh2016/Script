@@ -2,13 +2,12 @@ local PlaceId = game.PlaceId
 
 if PlaceId == nil then
     print("nil")
-
-elseif PlaceId == 1962086868 then
+if PlaceId == 1962086868 then
     -- Tower of Hell Script Execution
     print("Tower of Hell Script Executing")
     task.wait(0.5)
 
-    -- Anti-Ban Bypass Function
+    -- Anti-Ban Bypass Function (for use via button or loop)
     local function antiBanBypass()
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local GetBan = ReplicatedStorage:WaitForChild("getBans", 5)
@@ -18,25 +17,9 @@ elseif PlaceId == 1962086868 then
             GetBan:Destroy()
             AppealBans:Destroy()
             HookingBan:Destroy()
-            print("Anti-ban: 'getBans', 'appealBan', and 'HookBan' destroyed.")
+            print("Anti-ban: 'getBans', 'appealBan' and 'HookBan' destroyed.")
         else
             print("Anti-ban: one or more anti-ban objects not found.")
-        end
-    end
-
-    -- Anti-Kill Bypass Function
-    local function antiKillBypass()
-        local StarterPlayer = game:GetService("StarterPlayer")
-        local hitbox = StarterPlayer.StarterCharacterScripts:FindFirstChild("hitboxScript")
-        local hitboxOnPlayer = game.Players.LocalPlayer.Character:FindFirstChild("hitboxScript")
-        local killScript = game.Players.LocalPlayer.Character:FindFirstChild("KillScript")
-        if hitbox and hitboxOnPlayer and killScript then
-            hitbox:Destroy()
-            hitboxOnPlayer:Destroy()
-            killScript:Destroy()
-            print("Anti-kill: hitboxScript and KillScript destroyed.")
-        else
-            print("Anti-kill: one or more kill objects not found.")
         end
     end
 
@@ -65,7 +48,7 @@ elseif PlaceId == 1962086868 then
         Settings = Window:AddTab({ Title = "Settings", Icon = "settings" }),
     }
 
-    -- Load Fluent Addons
+    -- Load Fluent addons
     local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
     local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
     SaveManager:SetLibrary(Fluent)
@@ -73,9 +56,7 @@ elseif PlaceId == 1962086868 then
     InterfaceManager:BuildInterfaceSection(Tabs.Settings)
     SaveManager:BuildConfigSection(Tabs.Settings)
 
-    -------------------------
-    -- Notify Execution
-    -------------------------
+    -- Notify execution
     Fluent:Notify({
         Title = "Executed",
         Content = "Tower of Hell Script Loaded",
@@ -83,7 +64,7 @@ elseif PlaceId == 1962086868 then
     })
 
     -------------------------
-    -- Speed and Jump Power Setup
+    -- Character Setup: Update Speed & Jump Every 0.5 Seconds
     -------------------------
     local player = game.Players.LocalPlayer
     local humanoid = nil
@@ -111,11 +92,11 @@ elseif PlaceId == 1962086868 then
     end
 
     -------------------------
-    -- WalkSpeed Slider
+    -- Speed Slider (WalkSpeed)
     -------------------------
     local walkSpeedSlider = Tabs.Main:AddSlider("WalkSpeed", {
         Title = "Walk Speed",
-        Description = "Set WalkSpeed (game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value)",
+        Description = "Adjust WalkSpeed (game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value)",
         Default = 16,
         Min = 1,
         Max = 100,
@@ -133,7 +114,7 @@ elseif PlaceId == 1962086868 then
     -------------------------
     local jumpPowerSlider = Tabs.Main:AddSlider("JumpPower", {
         Title = "Jump Power",
-        Description = "Set JumpPower (game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value)",
+        Description = "Adjust JumpPower (game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value)",
         Default = 50,
         Min = 1,
         Max = 100,
@@ -151,6 +132,7 @@ elseif PlaceId == 1962086868 then
     -------------------------
     local infJumpEnabled = false
     local infJumpLoop
+    local UIS = game:GetService("UserInputService")
 
     Tabs.Main:AddToggle("InfJump", {
         Title = "Unlimited Jumps",
@@ -161,7 +143,7 @@ elseif PlaceId == 1962086868 then
                 if not infJumpLoop then
                     infJumpLoop = task.spawn(function()
                         while infJumpEnabled do
-                            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.Space) then
+                            if UIS:IsKeyDown(Enum.KeyCode.Space) then
                                 local Character = player.Character
                                 local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
                                 local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
@@ -218,7 +200,7 @@ elseif PlaceId == 1962086868 then
     })
 
     -------------------------
-    -- Misc Tab: Anti-Ban, Anti-Kill, DEX, AutoJump, and Anti-Fog/Anti-BunnyHop
+    -- Misc Tab: Anti-Ban, Anti-Kill, DEX, AutoJump, Anti-Fog, etc.
     -------------------------
     Tabs.Misc:AddButton({
         Title = "Anti-Ban Bypass",
@@ -293,7 +275,7 @@ elseif PlaceId == 1962086868 then
             end
         end,
     })
-    
+
 else
 
     -- Universal branch
