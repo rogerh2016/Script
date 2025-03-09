@@ -201,6 +201,7 @@ if PlaceId == 1962086868 then
                     task.wait(45)
             antiBanBypass()
                   task.wait(5)  
+            end
         end,
     })
 
@@ -217,7 +218,8 @@ if PlaceId == 1962086868 then
         hitbox:Destroy()
          hitboxonaplayer:Destroy()
             Killscript:Destroy()
-               task.wait(5)         
+               task.wait(5) 
+               end        
         end
         end,
     })
