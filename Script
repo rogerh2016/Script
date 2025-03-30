@@ -1,21 +1,22 @@
 local PlaceId = game.PlaceId
 
-----------------------------------------------------------------
--- TOWER OF HELL (PlaceId == 1962086868)
-----------------------------------------------------------------
 if PlaceId == 1962086868 then
+    -- Tower of Hell Script Execution
     print("Tower of Hell Script Executing")
     task.wait(0.5)
     
+    -- Load Discord UI Lib
     local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord"))()
     if not DiscordLib then
         warn("Discord UI Lib failed to load!")
         return
     end
 
+    -- Create Window and Server (Tab)
     local win = DiscordLib:Window("Tower Of Hell", "by me :P")
     local serv = win:Server("Tower of Hell", "Loading")
     
+    -- Create Channels (in order)
     local Main = serv:Channel("Main")
     local Coils = serv:Channel("Coils")
     local Anti = serv:Channel("Anti-Tab")
@@ -23,9 +24,9 @@ if PlaceId == 1962086868 then
     
     DiscordLib:Notification("Script Loaded", "Tower of Hell script loaded successfully.", "Got it!")
     
-    ------------------------------
+    -------------------------------------------
     -- GLOBAL VARIABLES & UPDATE LOOP
-    ------------------------------
+    -------------------------------------------
     local walkSpeedValue = 16
     local jumpPowerValue = 50
     local player = game.Players.LocalPlayer
@@ -45,9 +46,9 @@ if PlaceId == 1962086868 then
         updateSpeedAndJump()
     end)
 
-    ------------------------------
+    -------------------------------------------
     -- BYPASS FUNCTIONS & LOOP STARTER
-    ------------------------------
+    -------------------------------------------
     local function antiBanBypass()
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local GetBan = ReplicatedStorage:WaitForChild("getBans", 5)
@@ -110,9 +111,9 @@ if PlaceId == 1962086868 then
         end)
     end
 
-    ------------------------------
+    -------------------------------------------
     -- CHARACTER HANDLING
-    ------------------------------
+    -------------------------------------------
     local function onCharacterAdded(character)
         humanoid = character:WaitForChild("Humanoid")
         updateSpeedAndJump()
@@ -124,9 +125,9 @@ if PlaceId == 1962086868 then
         onCharacterAdded(player.Character)
     end
 
-    ------------------------------
+    -------------------------------------------
     -- MAIN CHANNEL (Sliders & Toggle)
-    ------------------------------
+    -------------------------------------------
     Main:Slider("WalkSpeed", 0, 500, 16, function(val)
         walkSpeedValue = val
         if humanoid then
@@ -148,10 +149,10 @@ if PlaceId == 1962086868 then
                 while infJumpEnabled do
                     if UIS:IsKeyDown(Enum.KeyCode.Space) then
                         local Character = player.Character
-                        local hum = Character and Character:FindFirstChildOfClass("Humanoid")
+                        local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
                         local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
-                        if hum and HRP then
-                            HRP.Velocity = Vector3.new(0, hum.JumpPower, 0)
+                        if Humanoid and HRP then
+                            HRP.Velocity = Vector3.new(0, Humanoid.JumpPower, 0)
                         end
                     end
                     task.wait()
@@ -160,9 +161,9 @@ if PlaceId == 1962086868 then
         end
     end)
 
-    ------------------------------
+    -------------------------------------------
     -- COILS CHANNEL (Buttons)
-    ------------------------------
+    -------------------------------------------
     Coils:Button("Clone Jump Coil", function()
         local Backpack = player.Backpack
         local jumpCoil = game.ReplicatedStorage.Gear:FindFirstChild("jump")
@@ -181,9 +182,9 @@ if PlaceId == 1962086868 then
         end
     end)
 
-    ------------------------------
+    -------------------------------------------
     -- ANTI-TAB CHANNEL (Bypass Buttons)
-    ------------------------------
+    -------------------------------------------
     Anti:Button("Anti-Ban", function()
         task.spawn(function()
             while true do
@@ -211,25 +212,26 @@ if PlaceId == 1962086868 then
     end)
 
     Anti:Button("Anti-Fog", function()
-        local Fog = game.ReplicatedStorage.Mutators:FindFirstChild("fog")
+        local Fog = game:GetService("ReplicatedStorage").Mutators:FindFirstChild("fog")
         if Fog then
             Fog:Destroy()
         end
     end)
 
     Anti:Button("Anti-BunnyHop", function()
-        local BunnyJump = game.ReplicatedStorage.Mutators:FindFirstChild("bunny")
+        local BunnyJump = game:GetService("ReplicatedStorage").Mutators:FindFirstChild("bunny")
         if BunnyJump then
             BunnyJump:Destroy()
         end
     end)
 
-    ------------------------------
+    -------------------------------------------
     -- MISC CHANNEL (Additional Features)
-    ------------------------------
+    -------------------------------------------
     Misc:Button("Enable DEX", function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Keyless-mobile-dex-17888"))()
     end)
+
     Misc:Toggle("AutoJump", false, function(state)
         if state then
             game.ReplicatedStorage.bunnyJumping.Value = true
@@ -237,216 +239,13 @@ if PlaceId == 1962086868 then
             game.ReplicatedStorage.bunnyJumping.Value = false
         end
     end)
-    
-    DiscordLib:Notification("Script Loaded", "Tower of Hell script loaded successfully.", "Got it!")
 
-----------------------------------------------------------------
--- NEON RACE HD (PlaceId == 12266201618)
-----------------------------------------------------------------
-elseif PlaceId == 12266201618 then
-    print("Neon Race HD Branch Executing")
-    task.wait(0.5)
-    local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord"))()
-    if not DiscordLib then
-        warn("Discord UI Lib failed to load!")
-        return
-    end
-    local win = DiscordLib:Window("Neon Run HD", "by me :P")
-    local serv = win:Server("Neon Race HD", "Loading")
+    DiscordLib:Notification("Script Loaded", "Tower of Hell script loaded successfully.", "Got it!")
     
-    local Main = serv:Channel("Main")
-    local Misc = serv:Channel("Misc")
-    
-    -- Global variables for speed/jump
-    local walkSpeedValue = 16
-    local jumpPowerValue = 50
-    local player = game.Players.LocalPlayer
-    local UIS = game:GetService("UserInputService")
-    local RunService = game:GetService("RunService")
-    local humanoid = nil
-    local infJumpEnabled = false
-    
-    -- Update loop using Heartbeat
-    RunService.Heartbeat:Connect(function()
-        local character = player.Character
-        local hum = character and character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = walkSpeedValue
-            hum.JumpPower = jumpPowerValue
-        end
-    end)
-    
-    Main:Slider("WalkSpeed", 0, 500, 16, function(val)
-        walkSpeedValue = val
-        local character = player.Character
-        local hum = character and character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = val
-        end
-    end)
-    
-    Main:Slider("JumpPower", 0, 150, 50, function(val)
-        jumpPowerValue = val
-        local character = player.Character
-        local hum = character and character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.JumpPower = val
-        end
-    end)
-    
-    Main:Toggle("Unlimited Jumps", false, function(state)
-        infJumpEnabled = state
-        if infJumpEnabled then
-            task.spawn(function()
-                while infJumpEnabled do
-                    if UIS:IsKeyDown(Enum.KeyCode.Space) then
-                        local character = player.Character
-                        local hum = character and character:FindFirstChildOfClass("Humanoid")
-                        local HRP = character and character:FindFirstChild("HumanoidRootPart")
-                        if hum and HRP then
-                            HRP.Velocity = Vector3.new(0, hum.JumpPower, 0)
-                        end
-                    end
-                    task.wait()
-                end
-            end)
-        end
-    end)
-    
-    -- Fly hack for Neon Race HD
-    local flying = false
-    local flySpeed = 50
-    local flySmoothness = 5
-    local BodyGyro, BodyVelocity, Connection
-    local direction = Vector3.new(0, 0, 0)
-    
-    local function updateDirection()
-        local moveDir = Vector3.new(0, 0, 0)
-        local Camera = game.Workspace.CurrentCamera
-        if UIS:IsKeyDown(Enum.KeyCode.W) then
-            moveDir = moveDir + (Camera.CFrame.LookVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.S) then
-            moveDir = moveDir - (Camera.CFrame.LookVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.A) then
-            moveDir = moveDir - (Camera.CFrame.RightVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.D) then
-            moveDir = moveDir + (Camera.CFrame.RightVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.Space) then
-            moveDir = moveDir + Vector3.new(0, flySpeed, 0)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-            moveDir = moveDir - Vector3.new(0, flySpeed, 0)
-        end
-        direction = direction:Lerp(moveDir, 1 / flySmoothness)
-    end
-    
-    local function startFlying()
-        if flying then return end
-        flying = true
-        local Character = player.Character or player.CharacterAdded:Wait()
-        local hrp = Character:WaitForChild("HumanoidRootPart")
-        local hum = Character:FindFirstChildOfClass("Humanoid")
-        if hum then hum.PlatformStand = true end
-        BodyGyro = Instance.new("BodyGyro", hrp)
-        BodyGyro.P = 9e4
-        BodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-        BodyGyro.CFrame = hrp.CFrame
-        BodyVelocity = Instance.new("BodyVelocity", hrp)
-        BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        BodyVelocity.Velocity = Vector3.new(0, 0, 0)
-        Connection = RunService.RenderStepped:Connect(function()
-            if flying then
-                updateDirection()
-                BodyVelocity.Velocity = direction
-                BodyGyro.CFrame = CFrame.new(hrp.Position, hrp.Position + game.Workspace.CurrentCamera.CFrame.LookVector)
-            end
-        end)
-    end
-    
-    local function stopFlying()
-        if not flying then return end
-        flying = false
-        if BodyGyro then BodyGyro:Destroy() end
-        if BodyVelocity then BodyVelocity:Destroy() end
-        if Connection then Connection:Disconnect() end
-        local Character = player.Character
-        local hum = Character and Character:FindFirstChildOfClass("Humanoid")
-        if hum then hum.PlatformStand = false end
-    end
-    
-    Main:Toggle("Fly", false, function(state)
-        if state then
-            startFlying()
-        else
-            stopFlying()
-        end
-    end)
-    Main:Slider("Fly Speed", 0, 500, 50, function(val)
-        flySpeed = val
-    end)
-    
-    -- Remove Music Toggle
-    Main:Toggle("Remove Music", false, function(state)
-        local Music = workspace:FindFirstChild("BGM")
-        if Music then
-            if state then
-                Music.Playing = false
-            else
-                Music.Playing = true
-                Music.TimePosition = 0
-            end
-        else
-            print("No music found in workspace!")
-        end
-    end)
-    
-    -- Anti-Kick Button
-    Misc:Button("Anti Kicks", function()
-        local RP = game:GetService("ReplicatedStorage")
-        local kickRemote = RP:FindFirstChild("KickRemote")
-        local antiCheatEvent = RP:FindFirstChild("AntiCheatEvent")
-        local banData = RP:FindFirstChild("BanData")
-        local applyTime = RP:FindFirstChild("ApplyTime") or RP:FindFirstChild("ApplyTime2") or RP:FindFirstChild("ApplyTime3") or RP:FindFirstChild("ApplyTime4")
-        if kickRemote then
-            kickRemote:Destroy()
-            print("KickRemote has been removed.")
-        else
-            print("KickRemote not found or already removed.")
-        end
-        if antiCheatEvent then
-            antiCheatEvent:Destroy()
-            print("AntiCheatEvent has been removed.")
-        else
-            print("AntiCheatEvent not found or already removed.")
-        end
-        if banData then
-            banData:Destroy()
-            print("BanData has been removed.")
-        else
-            print("BanData not found or already removed.")
-        end
-        if applyTime then
-            applyTime:Destroy()
-            print("ApplyTime has been removed.")
-        else
-            print("ApplyTime not found or already removed.")
-        end
-    end)
-    
-    Misc:Button("Enable DEX", function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Keyless-mobile-dex-17888"))()
-    end)
-    
-    DiscordLib:Notification("Script Loaded", "Neon Race HD script loaded successfully.", "Got it!")
-    
-----------------------------------------------------------------
--- GRACE (PlaceId == 110333320616502)
-----------------------------------------------------------------
 elseif PlaceId == 110333320616502 then
+    ------------------------------
+    -- Grace Branch
+    ------------------------------
     print("Grace loaded")
     task.wait(0.5)
     print(PlaceId)
@@ -456,12 +255,12 @@ elseif PlaceId == 110333320616502 then
         warn("Discord UI Lib failed to load!")
         return
     end
-
+    
     local win = DiscordLib:Window("Grace", "by me :P")
     local serv = win:Server("Grace", "Loading")
     
     local General = serv:Channel("General")
-    local Entities = serv:Channel("Entities")
+    local Entites = serv:Channel("Entities")
     local Badges = serv:Channel("Badges")
     
     General:Button("Rejoin", function()
@@ -478,7 +277,6 @@ elseif PlaceId == 110333320616502 then
         coroutine.resume(Rejoin)
     end)
     
-    -- Anti-Carnation Toggle
     local function antiCarnation(state)
         local CarnationScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendRush") and game:GetService("ReplicatedStorage").SendRush:FindFirstChild("Carnation")
         if CarnationScript then
@@ -493,12 +291,50 @@ elseif PlaceId == 110333320616502 then
         end
     end
     
-    Entities:Toggle("Anti-Carnation", false, function(state)
+    local function antiWorm(state)
+        local WormScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendWorm") and game:GetService("ReplicatedStorage").SendWorm:FindFirstChild("SlugFish")
+        if WormScript then
+            WormScript.Disabled = state
+            if state then
+                print("Anti-Worm: Worm script disabled.")
+            else
+                print("Anti-Worm: Worm script enabled.")
+            end
+        else
+            print("Anti-Worm: Worm script not found.")
+        end
+    end
+    
+    local function antiSorrow(state)
+        local SorrowScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendSorrow") and game:GetService("ReplicatedStorage").SendSorrow:FindFirstChild("rainattackPrototype")
+        if SorrowScript then
+            SorrowScript.Disabled = state
+            if state then
+                print("Anti-Sorrow: Sorrow script disabled.")
+            else
+                print("Anti-Sorrow: Sorrow script enabled.")
+            end
+        else
+            print("Anti-Sorrow: Sorrow script not found.")
+        end
+    end
+    
+    -------------------------------------------
+    -- ENTITIES CHANNEL (Anti-Carnation, Anti-Worm, Anti-Sorrow Toggles)
+    -------------------------------------------
+    Entites:Toggle("Anti-Carnation", false, function(state)
         antiCarnation(state)
     end)
     
-    -- Badges Button (Get All Badge)
-    Badges:Button("GetAllBadge", function()
+    Entites:Toggle("Anti-Worm", false, function(state)
+        antiWorm(state)
+    end)
+    
+    Entites:Toggle("Anti-Sorrow", false, function(state)
+        antiSorrow(state)
+    end)
+    
+    Badges:Button("GetAllBadge (Fixing)", function()
         local args = {
             3164611355775879,
             3438445391730220,
@@ -522,10 +358,268 @@ elseif PlaceId == 110333320616502 then
         game:GetService("ReplicatedStorage"):WaitForChild("BadgeGot"):FireServer(unpack(args))
     end)
     
-----------------------------------------------------------------
--- UNIVERSAL (all other PlaceIds)
-----------------------------------------------------------------
+
+
+
+elseif PlaceId == 12266201618 then  -- Neon Race HD branch
+    -- Load Discord UI Lib
+    local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord"))()
+    if not DiscordLib then
+        warn("Discord UI Lib failed to load!")
+        return
+    end
+
+    local win = DiscordLib:Window("Neon Race HD", "by me :P")
+    local serv = win:Server("🟣🏃🏻‍♂️‍➡️Neon Race HD", "Loading")
+
+    -- Create channels in order
+    local Main = serv:Channel("Main")
+    local Misc = serv:Channel("Misc")
+    local FlyChan = serv:Channel("Fly")  -- separate channel for fly options
+
+    DiscordLib:Notification("Script Loaded", "Neon Race HD script loaded successfully.", "Got it!")
+
+    -------------------------------
+    -- GLOBAL VARIABLES & UPDATE LOOP
+    -------------------------------
+    local player = game.Players.LocalPlayer
+    local walkSpeedValue = 16
+    local jumpPowerValue = 50
+    local RunService = game:GetService("RunService")
+    local UIS = game:GetService("UserInputService")
+    local humanoid = nil
+    local infJumpEnabled = false
+
+    -- Continuously update WalkSpeed and JumpPower on every heartbeat:
+    RunService.Heartbeat:Connect(function()
+        local character = player.Character
+        if character then
+            humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = walkSpeedValue
+                humanoid.JumpPower = jumpPowerValue
+            end
+        end
+    end)
+
+    -------------------------------
+    -- MAIN CHANNEL (Sliders & Toggle)
+    -------------------------------
+    Main:Slider("WalkSpeed", 0, 500, 16, function(val)
+        walkSpeedValue = val
+        local character = player.Character
+        local h = character and character:FindFirstChildOfClass("Humanoid")
+        if h then
+            h.WalkSpeed = val
+        end
+    end)
+
+    Main:Slider("JumpPower", 0, 150, 50, function(val)
+        jumpPowerValue = val
+        local character = player.Character
+        local h = character and character:FindFirstChildOfClass("Humanoid")
+        if h then
+            h.JumpPower = val
+        end
+    end)
+
+    Main:Toggle("Unlimited Jumps", false, function(state)
+        infJumpEnabled = state
+        if state then
+            task.spawn(function()
+                while infJumpEnabled do
+                    if UIS:IsKeyDown(Enum.KeyCode.Space) then
+                        local character = player.Character
+                        local h = character and character:FindFirstChildOfClass("Humanoid")
+                        local hrp = character and character:FindFirstChild("HumanoidRootPart")
+                        if h and hrp then
+                            hrp.Velocity = Vector3.new(0, h.JumpPower, 0)
+                        end
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end)
+
+    -------------------------------
+    -- FLY CHANNEL (Fly Hack)
+    -------------------------------
+    local flying = false
+    local flySpeed = 50
+    local flySmoothness = 5
+    local BodyGyro, BodyVelocity, FlyConnection
+    local direction = Vector3.new(0, 0, 0)
+
+    local function updateDirection()
+        local moveDir = Vector3.new(0, 0, 0)
+        local cam = game.Workspace.CurrentCamera
+        local lookVector = cam.CFrame.LookVector
+        if UIS:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + (lookVector * flySpeed) end
+        if UIS:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - (lookVector * flySpeed) end
+        if UIS:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - (cam.CFrame.RightVector * flySpeed) end
+        if UIS:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + (cam.CFrame.RightVector * flySpeed) end
+        if UIS:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0, flySpeed, 0) end
+        if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then moveDir = moveDir - Vector3.new(0, flySpeed, 0) end
+        direction = direction:Lerp(moveDir, 1 / flySmoothness)
+    end
+
+    local function startFlying()
+        if flying then return end
+        flying = true
+        local character = player.Character
+        local hrp = character and character:FindFirstChild("HumanoidRootPart")
+        local h = character and character:FindFirstChildOfClass("Humanoid")
+        if hrp and h then
+            h.PlatformStand = true
+            BodyGyro = Instance.new("BodyGyro", hrp)
+            BodyGyro.P = 90000
+            BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+            BodyGyro.CFrame = hrp.CFrame
+            BodyVelocity = Instance.new("BodyVelocity", hrp)
+            BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+            BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+            FlyConnection = RunService.RenderStepped:Connect(function()
+                if flying then
+                    updateDirection()
+                    BodyVelocity.Velocity = direction
+                    BodyGyro.CFrame = CFrame.new(hrp.Position, hrp.Position + game.Workspace.CurrentCamera.CFrame.LookVector)
+                end
+            end)
+        end
+    end
+
+    local function stopFlying()
+        if not flying then return end
+        flying = false
+        if BodyGyro then BodyGyro:Destroy() end
+        if BodyVelocity then BodyVelocity:Destroy() end
+        if FlyConnection then FlyConnection:Disconnect() end
+        local character = player.Character
+        local h = character and character:FindFirstChildOfClass("Humanoid")
+        if h then h.PlatformStand = false end
+    end
+
+    FlyChan:Toggle("Fly", false, function(state)
+        if state then
+            startFlying()
+        else
+            stopFlying()
+        end
+    end)
+
+    FlyChan:Slider("Fly Speed", 0, 500, 50, function(val)
+        flySpeed = val
+    end)
+
+    -------------------------------
+    -- AUTO WIN TOGGLE (Tween to Goal)
+    -------------------------------
+    Main:Toggle("Auto Win", false, function(state)
+        if state then
+            local goalFolder = workspace:FindFirstChild("ステージ1のゴール時")
+            if not goalFolder then
+                warn("Goal folder 'ステージ1のゴール時' not found!")
+                return
+            end
+            local goalPart = goalFolder:FindFirstChild("Goal")
+            if not goalPart then
+                warn("Goal part not found in folder!")
+                return
+            end
+            local character = player.Character
+            local hrp = character and character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                local goalPos = goalPart.Position + Vector3.new(0, 3, 0)
+                local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                local tween = game:GetService("TweenService"):Create(hrp, tweenInfo, {Position = goalPos})
+                tween:Play()
+            else
+                warn("HumanoidRootPart not found!")
+            end
+        else
+            -- Optionally cancel the tween if needed (not implemented)
+        end
+    end)
+
+    -------------------------------
+    -- ANTI KICK BUTTON
+    -------------------------------
+    Main:Button("Anti Kick", function()
+        local RP = game:GetService("ReplicatedStorage")
+        local kickRemote = RP:FindFirstChild("KickRemote")
+        local antiCheatEvent = RP:FindFirstChild("AntiCheatEvent")
+        local banData = RP:FindFirstChild("BanData")
+        local applyTime = RP:FindFirstChild("ApplyTime")
+            or RP:FindFirstChild("ApplyTime2")
+            or RP:FindFirstChild("ApplyTime3")
+            or RP:FindFirstChild("ApplyTime4")
+        if kickRemote then
+            kickRemote:Destroy()
+            print("KickRemote removed.")
+        else
+            print("KickRemote not found or already removed.")
+        end
+        if antiCheatEvent then
+            antiCheatEvent:Destroy()
+            print("AntiCheatEvent removed.")
+        else
+            print("AntiCheatEvent not found or already removed.")
+        end
+        if banData then
+            banData:Destroy()
+            print("BanData removed.")
+        else
+            print("BanData not found or already removed.")
+        end
+        if applyTime then
+            applyTime:Destroy()
+            print("ApplyTime removed.")
+        else
+            print("ApplyTime not found or already removed.")
+        end
+    end)
+
+    -------------------------------
+    -- MUSIC TOGGLE
+    -------------------------------
+    Main:Toggle("Remove Music", false, function(state)
+        local Music = workspace:FindFirstChild("BGM")
+        if Music then
+            if state then
+                Music.Playing = false
+            else
+                Music.Playing = true
+                Music.TimePosition = 0
+            end
+        else
+            print("No music found in workspace!")
+        end
+    end)
+
+    -------------------------------
+    -- MISC CHANNEL
+    -------------------------------
+    Misc:Button("Enable DEX", function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Keyless-mobile-dex-17888"))()
+    end)
+    Misc:Toggle("AutoJump", false, function(state)
+        if state then
+            game.ReplicatedStorage.bunnyJumping.Value = true
+        else
+            game.ReplicatedStorage.bunnyJumping.Value = false
+        end
+    end)
+
+    DiscordLib:Notification("Script Loaded", "Neon Race HD script loaded successfully.", "Got it!")
+
+
+
+
 else
+    ------------------------------
+    -- Universal Branch
+    ------------------------------
     print("Universal Script Executing")
     task.wait(0.5)
     
@@ -534,7 +628,7 @@ else
         warn("Discord UI Lib failed to load!")
         return
     end
-
+    
     local win = DiscordLib:Window("Universal", "by me :P")
     local serv = win:Server("Universal", "Loading")
     
@@ -544,140 +638,41 @@ else
     local walkSpeedValue = 16
     local jumpPowerValue = 50
     local player = game.Players.LocalPlayer
-    local UIS = game:GetService("UserInputService")
-    local RunService = game:GetService("RunService")
-    local humanoid = nil
-    local infJumpEnabled = false
-
+    
     local function updateSpeedAndJump()
         local character = player.Character
-        local hum = character and character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = walkSpeedValue
-            hum.JumpPower = jumpPowerValue
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = walkSpeedValue
+            humanoid.JumpPower = jumpPowerValue
         end
     end
-
-    RunService.Heartbeat:Connect(function()
+    game:GetService("RunService").Heartbeat:Connect(function()
         updateSpeedAndJump()
     end)
-
+    
     Main:Slider("WalkSpeed", 0, 500, 16, function(val)
         walkSpeedValue = val
         local character = player.Character
-        local hum = character and character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = val
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = val
         end
     end)
-
+    
     Main:Slider("JumpPower", 0, 150, 50, function(val)
         jumpPowerValue = val
         local character = player.Character
-        local hum = character and character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.JumpPower = val
-        end
-    end)
-
-    Main:Toggle("Unlimited Jumps", false, function(state)
-        infJumpEnabled = state
-        if infJumpEnabled then
-            task.spawn(function()
-                while infJumpEnabled do
-                    if UIS:IsKeyDown(Enum.KeyCode.Space) then
-                        local character = player.Character
-                        local hum = character and character:FindFirstChildOfClass("Humanoid")
-                        local hrp = character and character:FindFirstChild("HumanoidRootPart")
-                        if hum and hrp then
-                            hrp.Velocity = Vector3.new(0, hum.JumpPower, 0)
-                        end
-                    end
-                    task.wait()
-                end
-            end)
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.JumpPower = val
         end
     end)
     
-    -- Fly Script for Universal branch
-    local flying = false
-    local flySpeed = 50
-    local flySmoothness = 5
-    local BodyGyro, BodyVelocity, Connection
-    local direction = Vector3.new(0, 0, 0)
-    local function updateDirection()
-        local moveDir = Vector3.new(0, 0, 0)
-        local Camera = game.Workspace.CurrentCamera
-        if UIS:IsKeyDown(Enum.KeyCode.W) then
-            moveDir = moveDir + (Camera.CFrame.LookVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.S) then
-            moveDir = moveDir - (Camera.CFrame.LookVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.A) then
-            moveDir = moveDir - (Camera.CFrame.RightVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.D) then
-            moveDir = moveDir + (Camera.CFrame.RightVector * flySpeed)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.Space) then
-            moveDir = moveDir + Vector3.new(0, flySpeed, 0)
-        end
-        if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-            moveDir = moveDir - Vector3.new(0, flySpeed, 0)
-        end
-        direction = direction:Lerp(moveDir, 1 / flySmoothness)
-    end
-
-    local function startFlying()
-        if flying then return end
-        flying = true
-        local Character = player.Character or player.CharacterAdded:Wait()
-        local hrp = Character:WaitForChild("HumanoidRootPart")
-        local hum = Character:FindFirstChildOfClass("Humanoid")
-        if hum then hum.PlatformStand = true end
-        BodyGyro = Instance.new("BodyGyro", hrp)
-        BodyGyro.P = 9e4
-        BodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-        BodyGyro.CFrame = hrp.CFrame
-        BodyVelocity = Instance.new("BodyVelocity", hrp)
-        BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        BodyVelocity.Velocity = Vector3.new(0, 0, 0)
-        Connection = RunService.RenderStepped:Connect(function()
-            if flying then
-                updateDirection()
-                BodyVelocity.Velocity = direction
-                BodyGyro.CFrame = CFrame.new(hrp.Position, hrp.Position + game.Workspace.CurrentCamera.CFrame.LookVector)
-            end
-        end)
-    end
-
-    local function stopFlying()
-        if not flying then return end
-        flying = false
-        if BodyGyro then BodyGyro:Destroy() end
-        if BodyVelocity then BodyVelocity:Destroy() end
-        if Connection then Connection:Disconnect() end
-        local Character = player.Character
-        local hum = Character and Character:FindFirstChildOfClass("Humanoid")
-        if hum then hum.PlatformStand = false end
-    end
-
-    Main:Toggle("Fly", false, function(state)
-        if state then
-            startFlying()
-        else
-            stopFlying()
-        end
-    end)
-    Main:Slider("Fly Speed", 0, 500, 50, function(val)
-        flySpeed = val
-    end)
-    
-    -- Misc Channel: Enable DEX
     Misc:Button("Enable DEX", function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Keyless-mobile-dex-17888"))()
     end)
     
     DiscordLib:Notification("Script Loaded", "Universal script loaded successfully.", "Got it!")
+    
 end
