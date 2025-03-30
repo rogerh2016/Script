@@ -246,8 +246,12 @@ if PlaceId == 1962086868 then
 elseif PlaceId == 12266201618 then
     print("Neon Race HD Branch Executing")
     task.wait(0.5)
-    
-    local win = DiscordLib:Window("Neon Race HD", "by me :P")
+    local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord"))()
+    if not DiscordLib then
+        warn("Discord UI Lib failed to load!")
+        return
+    end
+    local win = DiscordLib:Window("Neon Run HD", "by me :P")
     local serv = win:Server("Neon Race HD", "Loading")
     
     local Main = serv:Channel("Main")
