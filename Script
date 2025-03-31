@@ -1,5 +1,4 @@
 local PlaceId = game.PlaceId
-
 if PlaceId == 1962086868 then
     -- Tower of Hell Script Execution
     print("Tower of Hell Script Executing")
@@ -277,14 +276,25 @@ elseif PlaceId == 110333320616502 then
         coroutine.resume(Rejoin)
     end)
     
+    local function moveToWorkspace(scriptObject)
+        -- Move the script to Workspace to effectively "disable" it
+        if scriptObject then
+            scriptObject.Parent = game.Workspace
+            print(scriptObject.Name .. " moved to workspace.")
+        else
+            print("Script object not found.")
+        end
+    end
+    
     local function antiCarnation(state)
         local CarnationScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendRush") and game:GetService("ReplicatedStorage").SendRush:FindFirstChild("Carnation")
         if CarnationScript then
-            CarnationScript.Disabled = state
             if state then
-                print("Anti-Carnation: Carnation script disabled.")
+                moveToWorkspace(CarnationScript)
+                print("Anti-Carnation: Carnation script moved to workspace.")
             else
-                print("Anti-Carnation: Carnation script enabled.")
+                -- Reparent it back if needed, but it's not part of this example.
+                print("Anti-Carnation: Carnation script is active.")
             end
         else
             print("Anti-Carnation: Carnation script not found.")
@@ -292,30 +302,42 @@ elseif PlaceId == 110333320616502 then
     end
     
     local function antiWorm(state)
-        local WormScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendWorm") and game:GetService("ReplicatedStorage").SendWorm:FindFirstChild("SlugFish")
+        local WormScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendWorm")
         if WormScript then
-            WormScript.Disabled = state
-            if state then
-                print("Anti-Worm: Worm script disabled.")
+            local SlugFish = WormScript:FindFirstChild("SlugFish")
+            if SlugFish then
+                if state then
+                    moveToWorkspace(SlugFish)
+                    print("Anti-Worm: Worm script moved to workspace.")
+                else
+                    -- Reparent it back if needed, but it's not part of this example.
+                    print("Anti-Worm: Worm script is active.")
+                end
             else
-                print("Anti-Worm: Worm script enabled.")
+                print("Anti-Worm: SlugFish not found.")
             end
         else
-            print("Anti-Worm: Worm script not found.")
+            print("Anti-Worm: SendWorm script not found.")
         end
     end
     
     local function antiSorrow(state)
-        local SorrowScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendSorrow") and game:GetService("ReplicatedStorage").SendSorrow:FindFirstChild("rainattackPrototype")
+        local SorrowScript = game:GetService("ReplicatedStorage"):FindFirstChild("SendSorrow")
         if SorrowScript then
-            SorrowScript.Disabled = state
-            if state then
-                print("Anti-Sorrow: Sorrow script disabled.")
+            local rainattackPrototype = SorrowScript:FindFirstChild("rainattackPrototype")
+            if rainattackPrototype then
+                if state then
+                    moveToWorkspace(rainattackPrototype)
+                    print("Anti-Sorrow: Sorrow script moved to workspace.")
+                else
+                    -- Reparent it back if needed, but it's not part of this example.
+                    print("Anti-Sorrow: Sorrow script is active.")
+                end
             else
-                print("Anti-Sorrow: Sorrow script enabled.")
+                print("Anti-Sorrow: rainattackPrototype not found.")
             end
         else
-            print("Anti-Sorrow: Sorrow script not found.")
+            print("Anti-Sorrow: SendSorrow script not found.")
         end
     end
     
@@ -334,7 +356,10 @@ elseif PlaceId == 110333320616502 then
         antiSorrow(state)
     end)
     
-    Badges:Button("GetAllBadge (Fixing)", function()
+    -------------------------------------------
+    -- BADGES CHANNEL (GetAllBadge Button)
+    -------------------------------------------
+    Badges:Button("GetAllBadge", function()
         local args = {
             3164611355775879,
             3438445391730220,
@@ -352,13 +377,16 @@ elseif PlaceId == 110333320616502 then
             1900477898605392,
             357844303001248,
             59892393420936,
-            3755020953334282,
-            4308325196132646
+            3755020953334282
         }
-        game:GetService("ReplicatedStorage"):WaitForChild("BadgeGot"):FireServer(unpack(args))
-    end)
-    
 
+        -- Fire each badge individually with a short delay between each one
+        for _, badgeId in ipairs(args) do
+            game:GetService("ReplicatedStorage"):WaitForChild("BadgeGot"):FireServer(badgeId)
+            task.wait(0.1) -- Adjust this delay if needed
+        end
+    end)
+end
 
 
 elseif PlaceId == 12266201618 then  -- Neon Race HD branch
@@ -375,7 +403,7 @@ elseif PlaceId == 12266201618 then  -- Neon Race HD branch
     -- Create channels in order
     local Main = serv:Channel("Main")
     local Misc = serv:Channel("Misc")
-    local FlyChan = serv:Channel("Fly")  -- separate channel for fly options
+
 
     DiscordLib:Notification("Script Loaded", "Neon Race HD script loaded successfully.", "Got it!")
 
@@ -442,15 +470,11 @@ elseif PlaceId == 12266201618 then  -- Neon Race HD branch
         end
     end)
 
-    -------------------------------
-    -- FLY CHANNEL (Fly Hack)
-    -------------------------------
     local flying = false
     local flySpeed = 50
     local flySmoothness = 5
     local BodyGyro, BodyVelocity, FlyConnection
     local direction = Vector3.new(0, 0, 0)
-
     local function updateDirection()
         local moveDir = Vector3.new(0, 0, 0)
         local cam = game.Workspace.CurrentCamera
@@ -500,7 +524,7 @@ elseif PlaceId == 12266201618 then  -- Neon Race HD branch
         if h then h.PlatformStand = false end
     end
 
-    FlyChan:Toggle("Fly", false, function(state)
+    Main:Toggle("Fly", false, function(state)
         if state then
             startFlying()
         else
@@ -508,40 +532,12 @@ elseif PlaceId == 12266201618 then  -- Neon Race HD branch
         end
     end)
 
-    FlyChan:Slider("Fly Speed", 0, 500, 50, function(val)
+    Main:Slider("Fly Speed", 0, 500, 50, function(val)
         flySpeed = val
     end)
 
-    -------------------------------
-    -- AUTO WIN TOGGLE (Tween to Goal)
-    -------------------------------
-    Main:Toggle("Auto Win", false, function(state)
-        if state then
-            local goalFolder = workspace:FindFirstChild("ステージ1のゴール時")
-            if not goalFolder then
-                warn("Goal folder 'ステージ1のゴール時' not found!")
-                return
-            end
-            local goalPart = goalFolder:FindFirstChild("Goal")
-            if not goalPart then
-                warn("Goal part not found in folder!")
-                return
-            end
-            local character = player.Character
-            local hrp = character and character:FindFirstChild("HumanoidRootPart")
-            if hrp then
-                local goalPos = goalPart.Position + Vector3.new(0, 3, 0)
-                local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                local tween = game:GetService("TweenService"):Create(hrp, tweenInfo, {Position = goalPos})
-                tween:Play()
-            else
-                warn("HumanoidRootPart not found!")
-            end
-        else
-            -- Optionally cancel the tween if needed (not implemented)
-        end
-    end)
-
+    local TweenService = game:GetService("TweenService")
+local autoWinTween = nil  -- to store the current tween   
     -------------------------------
     -- ANTI KICK BUTTON
     -------------------------------
@@ -603,20 +599,69 @@ elseif PlaceId == 12266201618 then  -- Neon Race HD branch
     Misc:Button("Enable DEX", function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Keyless-mobile-dex-17888"))()
     end)
-    Misc:Toggle("AutoJump", false, function(state)
-        if state then
-            game.ReplicatedStorage.bunnyJumping.Value = true
-        else
-            game.ReplicatedStorage.bunnyJumping.Value = false
+   
+    DiscordLib:Notification("Script Loaded", "Neon Race HD script loaded successfully.", "Got it!")
+
+elseif PlaceId == 5076734934 then
+print("Rooms loading...")
+task.wait(0.1)
+print(PlaceId)
+
+local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord"))()
+    if not DiscordLib then
+        warn("Discord UI Lib failed to load!")
+        return
+    end
+    
+    local win = DiscordLib:Window("Universal", "by me :P")
+    local serv = win:Server("Universal", "Loading")
+    
+    local Main = serv:Channel("Main")
+    local Misc = serv:Channel("Entities")
+    
+    local walkSpeedValue = 16
+    local jumpPowerValue = 50
+    local player = game.Players.LocalPlayer
+    
+    local function updateSpeedAndJump()
+        local character = player.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = walkSpeedValue
+            humanoid.JumpPower = jumpPowerValue
+        end
+    end
+    game:GetService("RunService").Heartbeat:Connect(function()
+        updateSpeedAndJump()
+    end)
+    
+    Main:Slider("WalkSpeed", 0, 500, 16, function(val)
+        walkSpeedValue = val
+        local character = player.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = val
+        end
+    end)
+    Main:Slider("JumpPower", 0, 150, 50, function(val)
+        jumpPowerValue = val
+        local character = player.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.JumpPower = val
         end
     end)
 
-    DiscordLib:Notification("Script Loaded", "Neon Race HD script loaded successfully.", "Got it!")
+
+
+
+
 
 
 
 
 else
+
     ------------------------------
     -- Universal Branch
     ------------------------------
@@ -659,7 +704,6 @@ else
             humanoid.WalkSpeed = val
         end
     end)
-    
     Main:Slider("JumpPower", 0, 150, 50, function(val)
         jumpPowerValue = val
         local character = player.Character
@@ -668,11 +712,9 @@ else
             humanoid.JumpPower = val
         end
     end)
-    
     Misc:Button("Enable DEX", function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Keyless-mobile-dex-17888"))()
     end)
     
-    DiscordLib:Notification("Script Loaded", "Universal script loaded successfully.", "Got it!")
-    
+    DiscordLib:Notification("Script Loaded", "Universal script loaded successfully.", "Got it!")   
 end
