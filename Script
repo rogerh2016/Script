@@ -386,8 +386,6 @@ elseif PlaceId == 110333320616502 then
             task.wait(0.1) -- Adjust this delay if needed
         end
     end)
-end
-
 
 elseif PlaceId == 12266201618 then  -- Neon Race HD branch
     -- Load Discord UI Lib
@@ -613,11 +611,11 @@ local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bl
         return
     end
     
-    local win = DiscordLib:Window("Universal", "by me :P")
-    local serv = win:Server("Universal", "Loading")
+    local win = DiscordLib:Window("Rooms", "by me :P")
+    local serv = win:Server("Rooms", "Loading")
     
     local Main = serv:Channel("Main")
-    local Misc = serv:Channel("Entities")
+    local Entites = serv:Channel("Entites")
     
     local walkSpeedValue = 16
     local jumpPowerValue = 50
@@ -653,13 +651,87 @@ local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bl
     end)
 
 
+Main:Button("Clone Gummy Flashlight", function()
+        local Backpack = player.Backpack
+        local Gummy = game.Lighting:FindFirstChild("Gummy Flashlight")
+        if Gummy then
+            local GummyFlashLight = Gummy:Clone()
+            GummyFlashLight.Parent = Backpack
+        end
+    end)
 
+    Entites:Button("Anti-A-60", function()
+        local Monster = workspace:FindFirstChild("monster")
+            if Monster then
+                Monster:Destroy()       
+            end
+        end)
 
+         Entites:Button("Anti-A-200", function()
+        local SecMonster = workspace:FindFirstChild("monster2")
+            if SecMonster then
+                SecMonster:Destroy()   
+            end
+        end)
 
+    
+elseif PlaceId  == 9585537847 then
+    -- Create a UI button using the Discord library or another UI method
 
+-- Create a UI button using the Discord library or another UI method
+local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord"))()
+local win = DiscordLib:Window("Shadvois RPG", "by me :P")
+local serv = win:Server("Shadvois RPG", "Controls")
 
+-- Create a channel for buttons
+local Controls = serv:Channel("Controls")
 
+-- Function to perform sword swing (auto attack)
+local function autoSwingSword()
+    local args = {
+        "Input",
+        "Basic Sword",  -- Weapon name or type
+        0.2831389427185058,  -- Attack power or time (modify as needed)
+        "SlashEvent",  -- Event name (check your event name)
+        Instance.new("Part", nil)  -- Placeholder, can be replaced with specific object if needed
+    }
+    game:GetService("Players").LocalPlayer.Character:WaitForChild("Combat"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+end
 
+-- Function to start auto-swinging the sword at intervals
+local function startAutoSwing()
+    while true do
+        -- Call the swing function every 1 second (adjust as needed)
+        autoSwingSword()
+        task.wait(1)  -- Delay between each attack (you can adjust this to make it faster or slower)
+    end
+end
+
+-- Variable to control whether auto-swing is running
+local autoSwingRunning = false
+local autoSwingThread = nil
+
+-- Button to toggle auto-swing of the sword
+Controls:Button("Toggle Auto Swing", function()
+    if autoSwingRunning then
+        -- If auto-swing is already running, stop it
+        autoSwingRunning = false
+        if autoSwingThread then
+            autoSwingThread:Disconnect()
+            autoSwingThread = nil
+        end
+        print("Auto Swing Stopped")
+    else
+        -- If auto-swing is not running, start it
+        autoSwingRunning = true
+        autoSwingThread = coroutine.wrap(startAutoSwing)
+        autoSwingThread()  -- Start the auto-swing function
+        print("Auto Swing Started")
+    end
+end)
+
+    
+    
 else
 
     ------------------------------
